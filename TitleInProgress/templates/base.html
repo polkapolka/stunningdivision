@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load i18n %}
+<head>
+    <meta charset="UTF-8">
+    <title>TitleInProgress</title>
+        <link rel="stylesheet" href={% static "bootstrap/css/bootstrap.min.css" %}>
+    <script type="text/javascript" src="{% static 'bootstrap/js/jquery-3.4.1.slim.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        {% block head_block %}
+    {% endblock %}
+</head>
+<body>
+<main class="main-content">
+    <div class="content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+
+    </div>
+</main>
+</body>
+</html>
