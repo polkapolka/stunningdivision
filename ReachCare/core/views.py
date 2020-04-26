@@ -66,3 +66,13 @@ def get_response(user_questionnaire):
         return closest_testing_site.as_text()
 
 
+def home_view(request):
+    return render(request, 'core/home.html')
+
+
+def account_view(request):
+    return render(request, 'core/account.html')
+
+
+def login_view(request):
+    return render(request, 'core/login.html')
