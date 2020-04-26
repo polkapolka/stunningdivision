@@ -28,12 +28,19 @@ TESTING_UNNECESSARY_TEXT = "You don’t need to get tested for Covid 19 at this 
 THANK_YOU_TEXT = "Thanks for using ReachCare! Respond with RESTART to start over."
 
 
+def should_restart(current_text):
+    clean_text = current_text.lower().strip()
+    if clean_text == "restart":
+        return True
+    return False
+
+
 @csrf_exempt
 def sms_response(request):
     user_id = request.POST.get('From', None)
     current_text = request.POST.get('Body', None)
 
-    if current_text == "RESTART":
+    if should_restart(current_text):
         try:
             uq = UserQuestionnaire.objects.get(user_id=user_id)
             uq.delete()
