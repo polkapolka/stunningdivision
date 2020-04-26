@@ -78,7 +78,7 @@ def get_response_message(user_questionnaire):
         return f"{WELCOME_TEXT}\n{YES_NO_TEXT}"
 
     if user_questionnaire.can_get_provider_test is None:
-        return f"{HAS_INSURANCE_RESPONSE}\n{YES_NO_TEXT}"
+        return f"{INSURANCE_QUESTION}\n{YES_NO_TEXT}"
 
     if user_questionnaire.is_experiencing_symptoms is None:
         return f"{SYMPTOM_QUESTION}\n{YES_NO_TEXT}"
