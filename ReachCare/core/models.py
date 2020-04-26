@@ -94,6 +94,8 @@ class UserQuestionnaire(models.Model):
 
     zip_code = models.CharField(max_length=6, default=None, null=True)
 
+    last_message_sent = models.CharField(max_length=1024, default=None, null=True)
+
     def process_response(self, current_text):
         if self.wants_questionnaire is None:
             if current_text == 'Y':

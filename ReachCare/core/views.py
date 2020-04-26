@@ -25,24 +25,31 @@ def sms_response(request):
     user_questionnaire, created = UserQuestionnaire.objects.get_or_create(user_id=user_id)
     if not created:
         user_questionnaire.process_response(current_text)
+
+    response_message = get_response_message(user_questionnaire)
+
+    original_message = user_questionnaire.last_message_sent
+    user_questionnaire.last_message_sent = response_message
     user_questionnaire.save()
 
     # Start our TwiML response
     resp = MessagingResponse()
 
-    # Add a text message
-    msg = resp.message(get_response(user_questionnaire))
+    # If we send the same message twice, that means the user's text wasn't understandable
+    if original_message is not None and original_message == response_message:
+        resp.message("Sorry, I didn't understand that. Please reply with one of the given options.")
+    resp.message(response_message)
 
     return HttpResponse(str(resp))
 
 
-def get_response(user_questionnaire):
+def get_response_message(user_questionnaire):
     if (
             user_questionnaire.wants_questionnaire is False or
             user_questionnaire.is_experiencing_symptoms is False or
             user_questionnaire.is_high_risk is False
     ):
-        return "Questionnaire has ended."
+        return "Questionnaire has ended. Respond with RESTART to start over."
 
     if user_questionnaire.wants_questionnaire is None:
         return "Welcome to the questionnaire. Would you like to proceed? (Y/N)"
