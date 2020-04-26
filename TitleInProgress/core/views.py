@@ -14,6 +14,13 @@ def sms_response(request):
     user_id = request.POST.get('From', None)
     current_text = request.POST.get('Body', None)
 
+    if current_text == "RESTART":
+        try:
+            uq = UserQuestionnaire.objects.get(user_id=user_id)
+            uq.delete()
+        except UserQuestionnaire.DoesNotExist:
+            pass
+
     user_questionnaire, created = UserQuestionnaire.objects.get_or_create(user_id=user_id)
     if not created:
         user_questionnaire.process_response(current_text)
