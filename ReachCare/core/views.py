@@ -80,3 +80,7 @@ def login_view(request):
     return render(request, 'core/login.html'
                   # ,{"login_form":login_form}
                   )
+
+def logout_view(request):
+    return render(request, 'core/logout.html'
+                  )

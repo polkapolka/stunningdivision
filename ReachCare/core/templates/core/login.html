@@ -3,11 +3,12 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container mb-lg-5 mt-lg-5 align-content-lg-center">
+    <div class="card">
         <form class="form-signin pt-5 px-5" method="post">
             {% csrf_token %}
 
 
-            <h1 class="h3 mb-3 font-weight-normal"></h1>
+            <h1 class="h3 mb-3 font-weight-normal text-center">Enter your phone number to login.</h1>
             <label for="inputPhone" class="sr-only">
                 Phone Number
             </label>
@@ -22,5 +23,6 @@
             <br>
 
         </form>
+    </div>
     </div>
 {% endblock %}
