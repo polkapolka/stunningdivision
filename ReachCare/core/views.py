@@ -64,3 +64,5 @@ def get_response(user_questionnaire):
     if user_questionnaire.zip_code is not None:
         closest_testing_site = user_questionnaire.get_closest_testing_site()
         return closest_testing_site.as_text()
+
+

@@ -25,7 +25,7 @@ SECRET_KEY = '$t034=0a!kwvkww-hqod)87a-_vtc&!@p)k*0iufkmo2#0i^aa'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.ngrok.io', 'localhost']
+ALLOWED_HOSTS = ['.ngrok.io', 'localhost','127.0.0.1']
 
 
 # Application definition
@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'hackathon',
         'USER': 'hackathonuser',
         'PASSWORD': 'hackthevirus',
-        'HOST': 'db',
+        'HOST': '',
         'PORT': '',
     }
 }
@@ -124,7 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 
 LOGIN_URL = '/home/login/'
