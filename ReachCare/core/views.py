@@ -1,17 +1,32 @@
-from django.shortcuts import render
-from django.contrib.auth import views as auth_views
-
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-
 from twilio.twiml.messaging_response import MessagingResponse
 
 from core.models import UserQuestionnaire
-from core.forms import LoginForm
-
 
 INVALID_RESPONSE_MESSAGE = "Sorry, I didn't understand that. " \
                            "Please reply with one of the given options."
+
+YES_NO_TEXT = "Reply 1 for Yes, 2 for No"
+
+WELCOME_TEXT = "Welcome to ReachCare. Would you like to proceed with the questionnaire?"
+
+INSURANCE_QUESTION = "Are you able to get tested through insurance or a medical provider?"
+
+HAS_INSURANCE_RESPONSE = "Please contact your insurance provider."
+
+SYMPTOM_QUESTION = "Are you experiencing fever, cough, or shortness of breath?"
+
+SYMPTOM_SEVERITY_QUESTION = "How are your symptoms?"
+SYMPTOM_SEVERITY_OPTIONS = "Press 1 for Mild, 2 for Severe or Worsening."
+
+ZIP_CODE_QUESTION = "What is your zip code?"
+
+TESTING_UNNECESSARY_TEXT = "You don’t need to get tested for Covid 19 at this time."
+
+THANK_YOU_TEXT = "Thanks for using ReachCare! Respond with RESTART to start over."
+
 
 @csrf_exempt
 def sms_response(request):
@@ -47,30 +62,32 @@ def sms_response(request):
 
 
 def get_response_message(user_questionnaire):
+    if user_questionnaire.wants_questionnaire is False:
+        return THANK_YOU_TEXT
+
+    if user_questionnaire.can_get_provider_test is True:
+        return f"{HAS_INSURANCE_RESPONSE}\n{THANK_YOU_TEXT}"
+
     if (
-            user_questionnaire.wants_questionnaire is False or
-            user_questionnaire.is_experiencing_symptoms is False or
-            user_questionnaire.is_high_risk is False
+            user_questionnaire.has_severe_worsening_symptoms is False or
+            user_questionnaire.is_experiencing_symptoms is False
     ):
-        return "Questionnaire has ended. Respond with RESTART to start over."
+        return f"{TESTING_UNNECESSARY_TEXT}\n{THANK_YOU_TEXT}"
 
     if user_questionnaire.wants_questionnaire is None:
-        return "Welcome to the questionnaire. Would you like to proceed? (Y/N)"
+        return f"{WELCOME_TEXT}\n{YES_NO_TEXT}"
+
+    if user_questionnaire.can_get_provider_test is None:
+        return f"{HAS_INSURANCE_RESPONSE}\n{YES_NO_TEXT}"
 
     if user_questionnaire.is_experiencing_symptoms is None:
-        return "Are you experiencing symptoms? (Y/N)"
-
-    if user_questionnaire.is_high_risk is None:
-        return "Are you high risk? (Y/N)"
+        return f"{SYMPTOM_QUESTION}\n{YES_NO_TEXT}"
 
     if user_questionnaire.has_severe_worsening_symptoms is None:
-        return "Are your symptoms 1. Mild 2. Severe 3. Worsening?"
-
-    if user_questionnaire.preferred_testing_site_type is None:
-        return "What is you preferred testing site type? 1. Walk up 2. Drive through"
+        return f"{SYMPTOM_SEVERITY_QUESTION}\n{SYMPTOM_SEVERITY_OPTIONS}"
 
     if user_questionnaire.zip_code is None:
-        return "What is your zip code?"
+        return ZIP_CODE_QUESTION
 
     if user_questionnaire.zip_code is not None:
         closest_testing_site = user_questionnaire.get_closest_testing_site()

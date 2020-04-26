@@ -76,11 +76,10 @@ class TestQuestionnaireView(TestCase):
 
     def test_invalid_zip_code(self):
         self.make_sms_request("hello")
-        self.make_sms_request("Y")
-        self.make_sms_request("Y")
-        self.make_sms_request("Y")
-        self.make_sms_request("Severe")
-        self.make_sms_request("Drive through")
+        self.make_sms_request("1")
+        self.make_sms_request("1")
+        self.make_sms_request("1")
+        self.make_sms_request("2")
         self.assert_invalid_response("invalid zip code")
         user_questionnaire = self.get_user_questionnaire()
         self.assertEqual(user_questionnaire.zip_code, None)
@@ -90,28 +89,21 @@ class TestQuestionnaireView(TestCase):
         user_questionnaire = self.get_user_questionnaire()
         self.assertNotEqual(user_questionnaire, None)
 
-        self.make_sms_request("Y"),
+        self.make_sms_request("1"),
         user_questionnaire.refresh_from_db()
         self.assertTrue(user_questionnaire.wants_questionnaire)
 
-        self.make_sms_request("Y"),
+        self.make_sms_request("2"),
+        user_questionnaire.refresh_from_db()
+        self.assertFalse(user_questionnaire.can_get_provider_test)
+
+        self.make_sms_request("1"),
         user_questionnaire.refresh_from_db()
         self.assertTrue(user_questionnaire.is_experiencing_symptoms)
 
-        self.make_sms_request("Y"),
-        user_questionnaire.refresh_from_db()
-        self.assertTrue(user_questionnaire.is_high_risk)
-
-        self.make_sms_request("Severe"),
+        self.make_sms_request("2"),
         user_questionnaire.refresh_from_db()
         self.assertTrue(user_questionnaire.has_severe_worsening_symptoms)
-
-        self.make_sms_request("Drive through"),
-        user_questionnaire.refresh_from_db()
-        self.assertEqual(
-            user_questionnaire.preferred_testing_site_type,
-            UserQuestionnaire.TestingSiteTypes.DRIVE_THROUGH
-        )
 
         self.make_sms_request("94611")
         user_questionnaire.refresh_from_db()
