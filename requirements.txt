@@ -1,3 +1,4 @@
 django==3.0.5
 psycopg2==2.8.5
 twilio==6.7.0
+django-crispy-forms==1.9.0

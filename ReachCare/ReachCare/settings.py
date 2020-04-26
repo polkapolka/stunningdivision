@@ -25,7 +25,7 @@ SECRET_KEY = '$t034=0a!kwvkww-hqod)87a-_vtc&!@p)k*0iufkmo2#0i^aa'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.ngrok.io', 'localhost','127.0.0.1']
+ALLOWED_HOSTS = ['.ngrok.io', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-'crispy_forms',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'hackathon',
         'USER': 'hackathonuser',
         'PASSWORD': 'hackthevirus',
-        'HOST': '',
+        'HOST': os.getenv("DATABASE_HOST", ""),
         'PORT': '',
     }
 }
