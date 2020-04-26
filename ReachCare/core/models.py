@@ -1,6 +1,11 @@
 import zipcodes
 from django.db import models
+from phone_field import PhoneField
 from django.utils.translation import gettext_lazy as _
+import requests
+import json
+
+ZIP_API_KEY = "PJ7Ha3OkOoK18zRDI37edh6Lwmz5LdNkwCDymlCgNHNWQPuVjE6CMqwypODh1owf"
 
 
 class Address(models.Model):
@@ -16,9 +21,9 @@ class Address(models.Model):
     )
 
     city = models.CharField(_('City'),
-        max_length=1024,
-        blank=True,
-    )
+                            max_length=1024,
+                            blank=True,
+                            )
 
     region_state = models.CharField(
         _('State'),
@@ -43,10 +48,12 @@ class Address(models.Model):
 
 
 class TestingSite(models.Model):
-    phone = models.CharField(
-        _("Phone Number"),
-        max_length=1024,
+
+    provider_name = models.CharField(
+        _("Testing Site Name"),
+        max_length=1024
     )
+    provider_phone = PhoneField(blank=True, help_text='Contact Provider to schedule test')
     address = models.ForeignKey(
         Address,
         verbose_name=_('Address'),
@@ -54,10 +61,15 @@ class TestingSite(models.Model):
         null=True,
         blank=True,
     )
-    name = models.CharField(
+    site_name = models.CharField(
         _("Testing Site Name"),
         max_length=1024
     )
+    site_phone = PhoneField(blank=True, help_text='Contact Provider to schedule test')
+
+    def as_text(self):
+        testing_site_text = f"Your closest testing site is\n{self.site_name}\n{self.address}\n\nCall this number:\n{self.provider_phone}\n to schedule a test."
+        return testing_site_text
 
 
 def is_valid_zip_code(zip_code):
@@ -66,8 +78,11 @@ def is_valid_zip_code(zip_code):
     except Exception:
         return False
 
+
 YES_VALUES = {"yes", "y", "1"}
 NO_VALUES = {"no", "n", "2"}
+
+
 def parse_yes_no(text):
     clean_text = text.lower().strip()
     if clean_text in YES_VALUES:
@@ -76,8 +91,11 @@ def parse_yes_no(text):
         return False
     return None
 
+
 MILD_VALUES = {"mild", "1"}
 SEVERE_VALUES = {"severe", "worsening", "2"}
+
+
 def parse_symptom_severity(text):
     clean_text = text.lower().strip()
     if clean_text in MILD_VALUES:
@@ -86,6 +104,34 @@ def parse_symptom_severity(text):
         return True
     return None
 
+
+def in_philadelphia(zipcode):
+    url = f"https://www.zipcodeapi.com/rest/{ZIP_API_KEY}/city-zips.json/Philadelphia/PA"
+    response = requests.get(url)
+    philadelphia_zipcodes = response.json().get("zip_codes")
+    return str(zipcode) in philadelphia_zipcodes
+
+
+def get_close_zipcodes(zipcode, distance, units="miles", minimal=False):
+    radius_minimal = "?minimal"
+    radius_api_url = f"https://www.zipcodeapi.com/rest/{ZIP_API_KEY}/radius.json/{zipcode}/{distance}/{units}"
+    if minimal:
+        radius_api_url += radius_minimal
+
+    response = requests.get(radius_api_url)
+    return response.json().get('zip_codes')
+
+
+def get_distances_between_zipcode_and_list(zipcode, other_zipcodes, units="miles"):
+    other_zipcodes_text = ",".join([str(x) for x in other_zipcodes])
+    url = f"https://www.zipcodeapi.com/rest/{ZIP_API_KEY}/multi-distance.json/{zipcode}/{other_zipcodes_text}/{units}"
+    response = requests.get(url)
+    return response.json().get('distances')
+
+
+def get_minimum_distance(distance_dict):
+    for min_value in sorted(distance_dict, key=distance_dict.get):
+        yield min_value
 
 
 # TODO: Implement
@@ -133,6 +179,7 @@ class UserQuestionnaire(models.Model):
     def get_closest_testing_site(self):
         if self.zip_code is None:
             raise ValueError("zip code is not set. Cannot find closest testing site")
-        return FakeTestingSite(self.zip_code)
-
-
+        testing_sites = TestingSite.objects.all()
+        distance_list = get_distances_between_zipcode_and_list(self.zip_code, [site.zipcode for site in testing_sites])
+        min_zip = next(get_minimum_distance(distance_list))
+        return testing_sites.filter(zipcode=min_zip)
