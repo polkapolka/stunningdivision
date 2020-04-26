@@ -10,6 +10,9 @@ from core.models import UserQuestionnaire
 from core.forms import LoginForm
 
 
+INVALID_RESPONSE_MESSAGE = "Sorry, I didn't understand that. " \
+                           "Please reply with one of the given options."
+
 @csrf_exempt
 def sms_response(request):
     user_id = request.POST.get('From', None)
@@ -37,7 +40,7 @@ def sms_response(request):
 
     # If we send the same message twice, that means the user's text wasn't understandable
     if original_message is not None and original_message == response_message:
-        resp.message("Sorry, I didn't understand that. Please reply with one of the given options.")
+        resp.message(INVALID_RESPONSE_MESSAGE)
     resp.message(response_message)
 
     return HttpResponse(str(resp))

@@ -4,6 +4,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 from core.models import UserQuestionnaire
+from core.views import INVALID_RESPONSE_MESSAGE
 
 
 class LoginViewTest(TestCase):
@@ -45,6 +46,13 @@ class TestQuestionnaireView(TestCase):
         except UserQuestionnaire.DoesNotExist:
             return None
 
+    def assert_invalid_response(self, text):
+        messages = self.make_sms_request(text)
+        self.assertEqual(
+            messages[0],
+            INVALID_RESPONSE_MESSAGE
+        )
+
     def make_sms_request(self, text):
         response = self.client.post("/home/sms", {"Body": text, "From": self.phone_number})
         self.assertEqual(response.status_code, 200)
@@ -64,11 +72,18 @@ class TestQuestionnaireView(TestCase):
 
     def test_unknown_response(self):
         self.make_sms_request("hello")
-        messages = self.make_sms_request("hello again")
-        self.assertEqual(
-            messages[0],
-            "Sorry, I didn't understand that. Please reply with one of the given options."
-        )
+        self.assert_invalid_response("hello again")
+
+    def test_invalid_zip_code(self):
+        self.make_sms_request("hello")
+        self.make_sms_request("Y")
+        self.make_sms_request("Y")
+        self.make_sms_request("Y")
+        self.make_sms_request("Severe")
+        self.make_sms_request("Drive through")
+        self.assert_invalid_response("invalid zip code")
+        user_questionnaire = self.get_user_questionnaire()
+        self.assertEqual(user_questionnaire.zip_code, None)
 
     def test_questionnaire_e2e(self):
         self.make_sms_request("hello"),
@@ -98,6 +113,6 @@ class TestQuestionnaireView(TestCase):
             UserQuestionnaire.TestingSiteTypes.DRIVE_THROUGH
         )
 
-        self.make_sms_request("123456")
+        self.make_sms_request("94611")
         user_questionnaire.refresh_from_db()
-        self.assertEqual(user_questionnaire.zip_code, "123456")
+        self.assertEqual(user_questionnaire.zip_code, "94611")

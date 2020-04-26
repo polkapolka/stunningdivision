@@ -1,3 +1,4 @@
+import zipcodes
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -58,9 +59,13 @@ class TestingSite(models.Model):
         max_length=1024
     )
 
+
 def is_valid_zip_code(zip_code):
-    # TODO: implement
-    return True
+    try:
+        return zipcodes.is_real(zip_code)
+    except Exception:
+        return False
+
 
 
 # TODO: Implement
