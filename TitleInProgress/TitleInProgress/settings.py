@@ -25,7 +25,7 @@ SECRET_KEY = '$t034=0a!kwvkww-hqod)87a-_vtc&!@p)k*0iufkmo2#0i^aa'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.ngrok.io']
 
 
 # Application definition
@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'hackathon',
         'USER': 'hackathonuser',
         'PASSWORD': 'hackthevirus',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '',
     }
 }

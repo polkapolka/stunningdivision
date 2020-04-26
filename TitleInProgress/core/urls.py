@@ -1,14 +1,15 @@
 from django.urls import path
 
-from .views import login_view, logout_view, home_view
-
+# from .views import login_view, logout_view, home_view
+from . import views
 
 urlpatterns = [
-    path('login/',
-         login_view,
-         name='login'),
-    path('logout/',
-         logout_view,
-         name='logout'),
-    path('/', home_view, name="home")
-    ]
+    path('sms', views.sms_response, name='sms'),
+    # path('login/',
+    #      login_view,
+    #      name='login'),
+    # path('logout/',
+    #      logout_view,
+    #      name='logout'),
+    # path('/', home_view, name="home")
+]

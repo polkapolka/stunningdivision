@@ -1,0 +1,31 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ".:/code"
+    command: python TitleInProgress/manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+  ngrok:
+    image: wernight/ngrok
+    ports:
+      - "0.0.0.0:4040:4040"
+    environment:
+      - NGROK_PORT=app:8000
+    links:
+      - app
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=hackathon
+      - POSTGRES_USER=hackathonuser
+      - POSTGRES_PASSWORD=hackthevirus
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
