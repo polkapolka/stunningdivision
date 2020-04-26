@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load i18n %}
+<head>
+    <meta charset="UTF-8">
+    <title>ReachCare</title>
+    <link rel="stylesheet" href={% static "bootstrap/css/bootstrap.min.css" %}>
+    <script type="text/javascript" src="{% static 'bootstrap/js/jquery-3.4.1.slim.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    {% block head_block %}
+    {% endblock %}
+</head>
+<body>
+<header>
+    <div class="container">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-info rounded">
+            <div class="container-fluid">
+                <a class="navbar-brand" href={% url 'home' %}>ReachCare</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarsExample09">
+                <ul class="navbar-nav mr-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href={% url 'account' %}>
+                                Account
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={% url 'Logout' %}>
+                                Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href={% url 'login' %}>
+                                Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+<main class="main-content">
+    <div class="content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </div>
+</main>
+<footer>
+    <div class="container">
+        <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark rounded-top justify-content-center">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'home' %}>Contact Us</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core'
+    'core',
+'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,4 @@ LANGUAGES = [('en', _('English')),
 # Language File Directory
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

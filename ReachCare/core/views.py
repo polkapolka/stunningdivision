@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from twilio.twiml.messaging_response import MessagingResponse
 
 from core.models import UserQuestionnaire
+from core.forms import LoginForm
 
 
 @csrf_exempt
@@ -75,4 +76,7 @@ def account_view(request):
 
 
 def login_view(request):
-    return render(request, 'core/login.html')
+    # login_form = LoginForm()
+    return render(request, 'core/login.html'
+                  # ,{"login_form":login_form}
+                  )

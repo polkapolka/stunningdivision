@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container mb-lg-5 mt-lg-5 align-content-lg-center">
+        <form class="form-signin pt-5 px-5" method="post">
+            {% csrf_token %}
+
+
+            <h1 class="h3 mb-3 font-weight-normal"></h1>
+            <label for="inputPhone" class="sr-only">
+                Phone Number
+            </label>
+            <input id="'id_username" name="username" class="form-control align-content-sm-center"
+                   placeholder="Phone Number" required autofocus>
+
+            <br>
+
+            <button class="btn btn-lg btn-primary btn-block" id="id_submit" type="submit">
+                Login
+            </button>
+            <br>
+
+        </form>
+    </div>
+{% endblock %}
