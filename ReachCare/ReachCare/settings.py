@@ -80,9 +80,9 @@ WSGI_APPLICATION = 'ReachCare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'hackathon',
-        'USER': 'hackathonuser',
-        'PASSWORD': 'hackthevirus',
+        'NAME': 'reachcare',
+        'USER': 'reachcare',
+        'PASSWORD': os.getenv("DATABASE_PASSWORD", ""),
         'HOST': os.getenv("DATABASE_HOST", ""),
         'PORT': '',
     }
