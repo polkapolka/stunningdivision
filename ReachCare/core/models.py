@@ -130,6 +130,8 @@ def get_distances_between_zipcode_and_list(zipcode, other_zipcodes, units="miles
 
 
 def get_minimum_distance(distance_dict):
+    if distance_dict is None:
+        return None
     for min_value in sorted(distance_dict, key=distance_dict.get):
         yield min_value
 
@@ -182,4 +184,6 @@ class UserQuestionnaire(models.Model):
         testing_sites = TestingSite.objects.all()
         distance_list = get_distances_between_zipcode_and_list(self.zip_code, [site.zipcode for site in testing_sites])
         min_zip = next(get_minimum_distance(distance_list))
+        if min_zip is None:
+            return None
         return testing_sites.filter(zipcode=min_zip)

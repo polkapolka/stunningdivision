@@ -14,7 +14,7 @@ GET_HELP_MESSAGE = "Please call 911 or go to the nearest hospital."
 
 WELCOME_TEXT = "Welcome to ReachCare. " \
                "If you’re having a medical emergency or severe symptoms of fever, cough, " \
-               f"and shortness of breath: {GET_HELP_MESSAGE}" \
+               f"and shortness of breath: {GET_HELP_MESSAGE} " \
                "If you’d like to find a COVID-19 testing center near you, " \
                "please answer the following questions. " \
                "Would you like to proceed?"
@@ -29,6 +29,7 @@ SYMPTOM_SEVERITY_QUESTION = "How are your symptoms?"
 SYMPTOM_SEVERITY_OPTIONS = "Press 1 for Mild or Moderate, 2 for Severe or Worsening."
 
 ZIP_CODE_QUESTION = "What is your zip code?"
+NO_TESTINGS_SITE_FOUND = "Unable to find a testing site."
 
 TESTING_UNNECESSARY_TEXT = "You don’t need to get tested for Covid 19 at this time. "
 
@@ -107,6 +108,8 @@ def get_response_message(user_questionnaire):
 
     if user_questionnaire.zip_code is not None:
         closest_testing_site = user_questionnaire.get_closest_testing_site()
+        if closest_testing_site is None:
+            return NO_TESTINGS_SITE_FOUND
         return closest_testing_site.as_text()
 
 
