@@ -10,20 +10,27 @@ INVALID_RESPONSE_MESSAGE = "Sorry, I didn't understand that. " \
 
 YES_NO_TEXT = "Reply 1 for Yes, 2 for No"
 
-WELCOME_TEXT = "Welcome to ReachCare. Would you like to proceed with the questionnaire?"
+GET_HELP_MESSAGE = "Please call 911 or go to the nearest hospital."
 
-INSURANCE_QUESTION = "Are you able to get tested through insurance or a medical provider?"
+WELCOME_TEXT = "Welcome to ReachCare. " \
+               "If you’re having a medical emergency or severe symptoms of fever, cough, " \
+               f"and shortness of breath: ${GET_HELP_MESSAGE}" \
+               "If you’d like to find a COVID-19 testing center near you, " \
+               "please answer the following questions. " \
+               "Would you like to proceed?"
 
-HAS_INSURANCE_RESPONSE = "Please contact your insurance provider."
+INSURANCE_QUESTION = "Are you able to get tested through your insurance?"
+
+HAS_INSURANCE_RESPONSE = "Please call your insurance for more info."
 
 SYMPTOM_QUESTION = "Are you experiencing fever, cough, or shortness of breath?"
 
 SYMPTOM_SEVERITY_QUESTION = "How are your symptoms?"
-SYMPTOM_SEVERITY_OPTIONS = "Press 1 for Mild, 2 for Severe or Worsening."
+SYMPTOM_SEVERITY_OPTIONS = "Press 1 for Mild or Moderate, 2 for Severe or Worsening."
 
 ZIP_CODE_QUESTION = "What is your zip code?"
 
-TESTING_UNNECESSARY_TEXT = "You don’t need to get tested for Covid 19 at this time."
+TESTING_UNNECESSARY_TEXT = "You don’t need to get tested for Covid 19 at this time. "
 
 THANK_YOU_TEXT = "Thanks for using ReachCare! Respond with RESTART to start over."
 
@@ -75,11 +82,11 @@ def get_response_message(user_questionnaire):
     if user_questionnaire.can_get_provider_test is True:
         return f"{HAS_INSURANCE_RESPONSE}\n{THANK_YOU_TEXT}"
 
-    if (
-            user_questionnaire.has_severe_worsening_symptoms is False or
-            user_questionnaire.is_experiencing_symptoms is False
-    ):
+    if user_questionnaire.is_experiencing_symptoms is False:
         return f"{TESTING_UNNECESSARY_TEXT}\n{THANK_YOU_TEXT}"
+
+    if user_questionnaire.has_severe_worsening_symptoms:
+        return f"{GET_HELP_MESSAGE}\n{THANK_YOU_TEXT}"
 
     if user_questionnaire.wants_questionnaire is None:
         return f"{WELCOME_TEXT}\n{YES_NO_TEXT}"

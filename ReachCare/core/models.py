@@ -92,7 +92,7 @@ def parse_yes_no(text):
     return None
 
 
-MILD_VALUES = {"mild", "1"}
+MILD_VALUES = {"mild", "moderate", "1"}
 SEVERE_VALUES = {"severe", "worsening", "2"}
 
 
