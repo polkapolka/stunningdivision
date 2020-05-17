@@ -1,14 +1,22 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
 {% block content %}
     <div class="container mb-lg-5 mt-lg-5 align-content-lg-center">
     <div class="card mb-lg-5 mt-lg-5 align-content-lg-center p-5 px-5">
         <h3>Welcome to ReachCare!</h3>
         <br>
         <p class="text-center">
-We are a hackathon group trying to help people reach testing sites by answering a questionaire using just their phone!
+We are a hackathon group trying to help people reach testing sites by answering a questionnaire using just their phone!
         </p>
         <wbr>
+        <p class="text-center">
+            Please post this PDF in public visible locations to help people find their testing site!
+            <strong>Download it <a href="/core/static/flyer.pdf">here</a></strong>
+<div class="container-fluid">
+            <img src='/core/static/flyer.png' class="img-responsive" style="width:100%">
+    </div>
+        </p>
 
     </div>
     </div>
