@@ -38,22 +38,34 @@ class Address(models.Model):
     )
 
     def __str__(self):
-        return f"{self.line_one + ','}" \
-            f"{self.line_two + ',' if self.line_two else ''}" \
-            f"{self.city + ',' if self.city else ''}" \
-            f"{self.code + ',' if self.code else ''}"
+        return f"{self.line_one + ', '}" \
+            f"{self.line_two + ', ' if self.line_two else ''}" \
+            f"{self.city + ', ' if self.city else ''}" \
+            f"{self.region_state + ', ' if self.region_state else ''}" \
+            f"{self.code if self.code else ''}"
 
     class Meta:
         verbose_name_plural = _("Addresses")
 
 
-class TestingSite(models.Model):
-
+class Provider(models.Model):
     provider_name = models.CharField(
-        _("Testing Site Name"),
+        _("Testing Provider Name"),
         max_length=1024
     )
     provider_phone = PhoneField(blank=True, help_text='Contact Provider to schedule test')
+    provider_alt_phone = PhoneField(blank=True)
+
+    def __str__(self):
+        return f"{self.provider_name}"
+
+class TestingSite(models.Model):
+    provider = models.ForeignKey(Provider,
+                                 on_delete=models.SET_NULL,
+                                 null=True,
+                                 blank=True,
+                                 )
+
     address = models.ForeignKey(
         Address,
         verbose_name=_('Address'),
@@ -68,7 +80,7 @@ class TestingSite(models.Model):
     site_phone = PhoneField(blank=True, help_text='Contact Provider to schedule test')
 
     def as_text(self):
-        testing_site_text = f"Your closest testing site is\n{self.site_name}\n{self.address}\n\nCall this number:\n{self.provider_phone}\n to schedule a test."
+        testing_site_text = f"Your closest testing site is\n{self.site_name}\n{self.address}\n\nCall this number:\n{self.provider.provider_phone}\n to schedule a test."
         return testing_site_text
 
 

@@ -1,0 +1,422 @@
+[
+{
+    "model": "core.address",
+    "pk": 1,
+    "fields": {
+        "line_one": "7401 Ogontz Ave.",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19138"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 2,
+    "fields": {
+        "line_one": "180 W. Girard Ave.",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19123"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 3,
+    "fields": {
+        "line_one": "2401 W. Cheltenham Ave.",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19095"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 4,
+    "fields": {
+        "line_one": "850 N. 11th Street",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19123"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 5,
+    "fields": {
+        "line_one": "4700 Wissahickon Avenue",
+        "line_two": "Building D, Suite 119",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19144"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 6,
+    "fields": {
+        "line_one": "6120 Woodland Avenue",
+        "line_two": "2nd Floor",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19142"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 7,
+    "fields": {
+        "line_one": "5201 Haverford Avenue",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19139"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 8,
+    "fields": {
+        "line_one": "1700 S. Broad Street",
+        "line_two": "2nd Floor",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19145"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 9,
+    "fields": {
+        "line_one": "555 S. 43rd Street",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19104"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 10,
+    "fields": {
+        "line_one": "4400 Haverford Avenue",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19104"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 11,
+    "fields": {
+        "line_one": "1900 N. 20th Street",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19121"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 12,
+    "fields": {
+        "line_one": "301 W. Girard Avenue",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19123"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 13,
+    "fields": {
+        "line_one": "131 E. Chelten Avenue",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19144"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 14,
+    "fields": {
+        "line_one": "2230 Cottman Avenue",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19149"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 15,
+    "fields": {
+        "line_one": "2840 West Dauphin Street",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19132"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 16,
+    "fields": {
+        "line_one": "6731 Woodland Avenue",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19142"
+    }
+},
+{
+    "model": "core.address",
+    "pk": 17,
+    "fields": {
+        "line_one": "9773 Roosevelt Blvd",
+        "line_two": "",
+        "city": "Philadelphia",
+        "region_state": "PA",
+        "code": "19114"
+    }
+},
+{
+    "model": "core.provider",
+    "pk": 1,
+    "fields": {
+        "provider_name": "PDPH Health Centers",
+        "provider_phone": "(215) 685-2933",
+        "provider_alt_phone": null
+    }
+},
+{
+    "model": "core.provider",
+    "pk": 2,
+    "fields": {
+        "provider_name": "The Family Practice & Counseling Network (FPCN)",
+        "provider_phone": "(215) 843-9720",
+        "provider_alt_phone": "(267) 356-0362"
+    }
+},
+{
+    "model": "core.provider",
+    "pk": 3,
+    "fields": {
+        "provider_name": "American Family Care (AFC) Urgent Care",
+        "provider_phone": "(267) 319-8047",
+        "provider_alt_phone": null
+    }
+},
+{
+    "model": "core.provider",
+    "pk": 4,
+    "fields": {
+        "provider_name": "Rite Aid #01941",
+        "provider_phone": "(215) 224-9997",
+        "provider_alt_phone": null
+    }
+},
+{
+    "model": "core.provider",
+    "pk": 5,
+    "fields": {
+        "provider_name": "Rite Aid #04554",
+        "provider_phone": "(215) 724-9677",
+        "provider_alt_phone": null
+    }
+},
+{
+    "model": "core.provider",
+    "pk": 6,
+    "fields": {
+        "provider_name": "Rite Aid #11127",
+        "provider_phone": "(215) 673-0747",
+        "provider_alt_phone": null
+    }
+},
+{
+    "model": "core.provider",
+    "pk": 7,
+    "fields": {
+        "provider_name": "Spectrum Heath Services",
+        "provider_phone": "(215) 471-2761",
+        "provider_alt_phone": null
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 1,
+    "fields": {
+        "provider": 4,
+        "address": 1,
+        "site_name": "Rite Aid #01941",
+        "site_phone": "(215) 224-9997"
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 2,
+    "fields": {
+        "provider": 5,
+        "address": 16,
+        "site_name": "Rite Aid #04554",
+        "site_phone": "(215) 724-9677"
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 3,
+    "fields": {
+        "provider": 6,
+        "address": 17,
+        "site_name": "Rite Aid #11127",
+        "site_phone": "(215) 673-0747"
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 4,
+    "fields": {
+        "provider": 3,
+        "address": 2,
+        "site_name": "Northern Liberties",
+        "site_phone": "(267) 319-8047"
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 5,
+    "fields": {
+        "provider": 3,
+        "address": 3,
+        "site_name": "Cheltenham",
+        "site_phone": "(267) 436-0322"
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 6,
+    "fields": {
+        "provider": 2,
+        "address": 4,
+        "site_name": "11th Street Family Health Services",
+        "site_phone": "(215) 769-1100"
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 7,
+    "fields": {
+        "provider": 2,
+        "address": 5,
+        "site_name": "Abbottsford Falls Family Practice & Counseling",
+        "site_phone": "(215) 843-9720"
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 8,
+    "fields": {
+        "provider": 2,
+        "address": 6,
+        "site_name": "Health Annex",
+        "site_phone": "(215) 727-4721"
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 9,
+    "fields": {
+        "provider": 7,
+        "address": 7,
+        "site_name": "Spectrum Community Health Services",
+        "site_phone": null
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 10,
+    "fields": {
+        "provider": 1,
+        "address": 8,
+        "site_name": "Health Center 2",
+        "site_phone": null
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 11,
+    "fields": {
+        "provider": 1,
+        "address": 9,
+        "site_name": "Health Center 3",
+        "site_phone": null
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 12,
+    "fields": {
+        "provider": 1,
+        "address": 10,
+        "site_name": "Health Center 4",
+        "site_phone": null
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 13,
+    "fields": {
+        "provider": 1,
+        "address": 11,
+        "site_name": "Health Center 5",
+        "site_phone": null
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 14,
+    "fields": {
+        "provider": 1,
+        "address": 12,
+        "site_name": "Health Center 6",
+        "site_phone": null
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 15,
+    "fields": {
+        "provider": 1,
+        "address": 13,
+        "site_name": "Health Center 9",
+        "site_phone": null
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 16,
+    "fields": {
+        "provider": 1,
+        "address": 14,
+        "site_name": "Health Center 10",
+        "site_phone": null
+    }
+},
+{
+    "model": "core.testingsite",
+    "pk": 17,
+    "fields": {
+        "provider": 1,
+        "address": 15,
+        "site_name": "Strawberry Mansion Health Center",
+        "site_phone": null
+    }
+}
+]
