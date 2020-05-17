@@ -131,7 +131,7 @@ def get_distances_between_zipcode_and_list(zipcode, other_zipcodes, units="miles
 
 def get_minimum_distance(distance_dict):
     if distance_dict is None:
-        return None
+        yield None
     for min_value in sorted(distance_dict, key=distance_dict.get):
         yield min_value
 
