@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from twilio.twiml.messaging_response import MessagingResponse
@@ -45,7 +45,9 @@ def should_restart(current_text):
 @csrf_exempt
 def sms_response(request):
     user_id = request.POST.get('From', None)
-    current_text = request.POST.get('Body', None)
+    current_text = request.POST.get('Body', "")
+    if user_id is None:
+        return HttpResponseBadRequest("No user id found in post 'From' field")
 
     if should_restart(current_text):
         try:
