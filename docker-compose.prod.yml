@@ -9,6 +9,8 @@ services:
     environment:
       - DATABASE_HOST=db
       - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS
     depends_on:
       - db
   db:

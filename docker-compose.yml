@@ -11,6 +11,7 @@ services:
     environment:
       - DATABASE_HOST=db
       - DATABASE_PASSWORD=hackthevirus
+      - DEBUG=${DEBUG:-true}
     depends_on:
       - db
   ngrok:
