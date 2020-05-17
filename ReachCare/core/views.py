@@ -14,7 +14,7 @@ GET_HELP_MESSAGE = "Please call 911 or go to the nearest hospital."
 
 WELCOME_TEXT = "Welcome to ReachCare. " \
                "If you’re having a medical emergency or severe symptoms of fever, cough, " \
-               f"and shortness of breath: ${GET_HELP_MESSAGE}" \
+               f"and shortness of breath: {GET_HELP_MESSAGE}" \
                "If you’d like to find a COVID-19 testing center near you, " \
                "please answer the following questions. " \
                "Would you like to proceed?"
