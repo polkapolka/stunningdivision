@@ -2,11 +2,7 @@ import zipcodes
 from django.db import models
 from phone_field import PhoneField
 from django.utils.translation import gettext_lazy as _
-import requests
-import json
-
-ZIP_API_KEY = "PJ7Ha3OkOoK18zRDI37edh6Lwmz5LdNkwCDymlCgNHNWQPuVjE6CMqwypODh1owf"
-
+from .utils import GeoNamesClient
 
 class Address(models.Model):
     line_one = models.CharField(
@@ -39,7 +35,7 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.line_one + ', '}" \
-            f"{self.line_two + ', ' if self.line_two else ''}" \
+            f"{self.line_two + ', ' if self.line_two else ''}\n" \
             f"{self.city + ', ' if self.city else ''}" \
             f"{self.region_state + ', ' if self.region_state else ''}" \
             f"{self.code if self.code else ''}"
@@ -58,6 +54,12 @@ class Provider(models.Model):
 
     def __str__(self):
         return f"{self.provider_name}"
+
+    def as_text(self):
+        provider_site_text = f"Testing Provider:\n{self.provider_name}\n{self.provider_phone.formatted}"
+        if self.provider_alt_phone:
+            provider_site_text += f"\n{self.provider_alt_phone.formatted}"
+        return provider_site_text
 
 class TestingSite(models.Model):
     provider = models.ForeignKey(Provider,
@@ -80,7 +82,9 @@ class TestingSite(models.Model):
     site_phone = PhoneField(blank=True, help_text='Contact Provider to schedule test')
 
     def as_text(self):
-        testing_site_text = f"Your closest testing site is\n{self.site_name}\n{self.address}\n\nCall this number:\n{self.provider.provider_phone}\n to schedule a test."
+        testing_site_text = f"Your closest testing site:\n"\
+            f"{self.site_name}\n{self.address}\n{self.site_phone.formatted}\n" \
+            f"Call the testing provider to schedule a test:\n{self.provider.as_text()}"
         return testing_site_text
 
 
@@ -117,35 +121,23 @@ def parse_symptom_severity(text):
     return None
 
 
-def in_philadelphia(zipcode):
-    url = f"https://www.zipcodeapi.com/rest/{ZIP_API_KEY}/city-zips.json/Philadelphia/PA"
-    response = requests.get(url)
-    philadelphia_zipcodes = response.json().get("zip_codes")
-    return str(zipcode) in philadelphia_zipcodes
-
-
-def get_close_zipcodes(zipcode, distance, units="miles", minimal=False):
-    radius_minimal = "?minimal"
-    radius_api_url = f"https://www.zipcodeapi.com/rest/{ZIP_API_KEY}/radius.json/{zipcode}/{distance}/{units}"
-    if minimal:
-        radius_api_url += radius_minimal
-
-    response = requests.get(radius_api_url)
-    return response.json().get('zip_codes')
-
-
-def get_distances_between_zipcode_and_list(zipcode, other_zipcodes, units="miles"):
-    other_zipcodes_text = ",".join([str(x) for x in other_zipcodes])
-    url = f"https://www.zipcodeapi.com/rest/{ZIP_API_KEY}/multi-distance.json/{zipcode}/{other_zipcodes_text}/{units}"
-    response = requests.get(url)
-    return response.json().get('distances')
-
-
-def get_minimum_distance(distance_dict):
-    if distance_dict is None:
-        yield None
-    for min_value in sorted(distance_dict, key=distance_dict.get):
-        yield min_value
+def find_closest_address(zipcode, radius=10, max_limit=50, step=10):
+    if radius > max_limit:
+        raise ValueError("Too far to travel")
+    gc = GeoNamesClient()
+    zipcodes = {postalcode.get("postalCode"): postalcode.get("distance")
+                for postalcode in gc.find_nearby_postal_codes(zipcode, radius=radius, as_json=True)}
+    addresses = Address.objects.filter(code__in=zipcodes.keys())
+    if len(addresses) == 0:
+        # If no addresses, expand search radius
+        return find_closest_address(zipcode, radius+step)
+    elif len(addresses) == 1:
+        # If only one, return one
+        return addresses[0]
+    else:
+        # If more than one, append distance, sort and return min element
+        distances = {address: zipcodes[address.code] for address in addresses}
+        return sorted(distances, key=distances.get)[0]
 
 
 # TODO: Implement
@@ -193,9 +185,11 @@ class UserQuestionnaire(models.Model):
     def get_closest_testing_site(self):
         if self.zip_code is None:
             raise ValueError("zip code is not set. Cannot find closest testing site")
-        testing_sites = TestingSite.objects.all()
-        distance_list = get_distances_between_zipcode_and_list(self.zip_code, [site.zipcode for site in testing_sites])
-        min_zip = next(get_minimum_distance(distance_list))
-        if min_zip is None:
-            return None
-        return testing_sites.filter(zipcode=min_zip)
+        # Check for one in the person's zipcode
+        closest = Address.objects.filter(code=self.zip_code)
+        if closest:
+            return closest.testsite_set.first()
+        # Find the closest one
+        closest_address = find_closest_address(self.zip_code)
+        return closest_address.testingsite_set.first()
+
