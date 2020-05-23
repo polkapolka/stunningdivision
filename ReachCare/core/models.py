@@ -186,9 +186,9 @@ class UserQuestionnaire(models.Model):
         if self.zip_code is None:
             raise ValueError("zip code is not set. Cannot find closest testing site")
         # Check for one in the person's zipcode
-        closest = Address.objects.filter(code=self.zip_code)
+        closest = Address.objects.filter(code=self.zip_code).first()
         if closest:
-            return closest.testsite_set.first()
+            return closest.testingsite_set.first()
         # Find the closest one
         closest_address = find_closest_address(self.zip_code)
         return closest_address.testingsite_set.first()
