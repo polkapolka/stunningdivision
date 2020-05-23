@@ -34,7 +34,7 @@ SYMPTOM_SEVERITY_QUESTION = "How are your symptoms?"
 SYMPTOM_SEVERITY_OPTIONS = "Press 1 for Mild or Moderate, 2 for Severe or Worsening."
 
 ZIP_CODE_QUESTION = "What is your zip code?"
-NO_TESTINGS_SITE_FOUND = "Unable to find a testing site."
+NO_TESTINGS_SITE_FOUND = "Sorry, I was unable to find a testing site for that zipcode."
 
 TESTING_UNNECESSARY_TEXT = "You don’t need to get tested for Covid 19 at this time. "
 
@@ -116,9 +116,9 @@ def get_response_message(user_questionnaire):
             closest_testing_site = user_questionnaire.get_closest_testing_site()
         except Exception as e:
             logger.error("Failed to get testing site", exc_info=e)
-            return NO_TESTINGS_SITE_FOUND
+            closest_testing_site = None
         if closest_testing_site is None:
-            return NO_TESTINGS_SITE_FOUND
+            return f"{NO_TESTINGS_SITE_FOUND}\n{THANK_YOU_TEXT}"
         return closest_testing_site.as_text()
 
 

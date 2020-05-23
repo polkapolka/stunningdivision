@@ -121,12 +121,12 @@ def parse_symptom_severity(text):
     return None
 
 
-def find_closest_address(zipcode, radius=10, max_limit=50, step=10):
+def find_closest_address(zipcode, radius=10, max_limit=30, step=10):
     if radius > max_limit:
         raise ValueError("Too far to travel")
     gc = GeoNamesClient()
     zipcodes = {postalcode.get("postalCode"): postalcode.get("distance")
-                for postalcode in gc.find_nearby_postal_codes(zipcode, radius=radius, as_json=True)}
+                for postalcode in gc.find_nearby_postal_codes(zipcode, radius=radius)}
     addresses = Address.objects.filter(code__in=zipcodes.keys())
     if len(addresses) == 0:
         # If no addresses, expand search radius

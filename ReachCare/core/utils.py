@@ -1,7 +1,10 @@
+import logging
+
 import requests
-import json
 
 # http://api.geonames.org/findNearbyPostalCodes?postalcode=94611&country=USA&radius=10&username=reachcare
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 
 class GeoNamesClient:
@@ -10,15 +13,18 @@ class GeoNamesClient:
     params = {}
 
     def __init__(self, username='reachcare', country="USA"):
-        self.params['username']=username
-        self.params['country']=country
+        self.params['username'] = username
+        self.params['country'] = country
 
-    def find_nearby_postal_codes(self, zipcode, radius=10, as_json=False):
+    def find_nearby_postal_codes(self, zipcode, radius=10):
         if not zipcode:
             raise ValueError("Must provide zipcode")
         self.params['postalcode'] = zipcode
         self.params['radius'] = radius
-        return self.get(as_json=as_json)['postalCodes']
+        response_json = self.get(as_json=True)
+        if 'postalCodes' not in response_json:
+            logger.error(f"failed to get neerby postal codes for: {zipcode}, radius: {radius}")
+        return response_json.get("postalCodes", [])
 
     def get(self, as_json=False):
         if as_json:
