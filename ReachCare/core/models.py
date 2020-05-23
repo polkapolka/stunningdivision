@@ -140,15 +140,6 @@ def find_closest_address(zipcode, radius=10, max_limit=30, step=10):
         return sorted(distances, key=distances.get)[0]
 
 
-# TODO: Implement
-class FakeTestingSite(object):
-    def __init__(self, zip_code):
-        self.zip_code = zip_code
-
-    def as_text(self):
-        return f"123 Testing Drive\nVillageville, State {self.zip_code}"
-
-
 class UserQuestionnaire(models.Model):
     user_id = models.CharField(_("User identifier"), max_length=1024, primary_key=True)
 
