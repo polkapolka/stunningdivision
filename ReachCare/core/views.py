@@ -1,9 +1,14 @@
+import logging
+
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from twilio.twiml.messaging_response import MessagingResponse
 
 from core.models import UserQuestionnaire
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 INVALID_RESPONSE_MESSAGE = "Sorry, I didn't understand that. " \
                            "Please reply with one of the given options."
@@ -107,7 +112,11 @@ def get_response_message(user_questionnaire):
         return ZIP_CODE_QUESTION
 
     if user_questionnaire.zip_code is not None:
-        closest_testing_site = user_questionnaire.get_closest_testing_site()
+        try:
+            closest_testing_site = user_questionnaire.get_closest_testing_site()
+        except Exception as e:
+            logger.error("Failed to get testing site", exc_info=e)
+            return NO_TESTINGS_SITE_FOUND
         if closest_testing_site is None:
             return NO_TESTINGS_SITE_FOUND
         return closest_testing_site.as_text()
