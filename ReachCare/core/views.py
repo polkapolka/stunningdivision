@@ -119,7 +119,7 @@ def get_response_message(user_questionnaire):
             closest_testing_site = None
         if closest_testing_site is None:
             return f"{NO_TESTINGS_SITE_FOUND}\n{THANK_YOU_TEXT}"
-        return closest_testing_site.as_text()
+        return f"{closest_testing_site.as_text()}\n{THANK_YOU_TEXT}"
 
 
 def home_view(request):

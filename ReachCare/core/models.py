@@ -56,10 +56,11 @@ class Provider(models.Model):
         return f"{self.provider_name}"
 
     def as_text(self):
-        provider_site_text = f"Testing Provider:\n{self.provider_name}\n{self.provider_phone.formatted}"
+        provider_site_text = f"Testing Provider:\n{self.provider_name}\n{self.provider_phone.formatted if self.provider_phone else ''}"
         if self.provider_alt_phone:
             provider_site_text += f"\n{self.provider_alt_phone.formatted}"
         return provider_site_text
+
 
 class TestingSite(models.Model):
     provider = models.ForeignKey(Provider,
@@ -83,7 +84,7 @@ class TestingSite(models.Model):
 
     def as_text(self):
         testing_site_text = f"Your closest testing site:\n"\
-            f"{self.site_name}\n{self.address}\n{self.site_phone.formatted}\n" \
+            f"{self.site_name}\n{self.address}\n{self.site_phone.formatted if self.site_phone else ''}\n" \
             f"Call the testing provider to schedule a test:\n{self.provider.as_text()}"
         return testing_site_text
 
