@@ -85,7 +85,7 @@ class TestingSite(models.Model):
     def as_text(self):
         testing_site_text = f"Your closest testing site:\n"\
             f"{self.site_name}\n{self.address}\n{self.site_phone.formatted if self.site_phone else ''}\n" \
-            f"Call the testing provider to schedule a test:\n{self.provider.as_text()}"
+            f"Call the testing provider or site to schedule a test:\n{self.provider.as_text()}"
         return testing_site_text
 
 
