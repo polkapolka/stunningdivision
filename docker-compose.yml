@@ -9,6 +9,8 @@ services:
       - ".:/code"
     command: ["./wait-for-it.sh", "db:5432", "--", "python", "ReachCare/manage.py", "runserver", "0.0.0.0:8000"]
     environment:
+      - DATABASE_NAME=reachcare
+      - DATABASE_USER=reachcare
       - DATABASE_HOST=db
       - DATABASE_PASSWORD=hackthevirus
       - DEBUG=${DEBUG:-true}

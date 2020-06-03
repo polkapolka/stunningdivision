@@ -9,9 +9,6 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-from dotenv import load_dotenv
-load_dotenv()
-
 import os
 from django.utils.translation import gettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -28,8 +25,7 @@ SECRET_KEY = '$t034=0a!kwvkww-hqod)87a-_vtc&!@p)k*0iufkmo2#0i^aa'
 DEBUG = os.getenv("DEBUG", "false") == "true"
 
 EXTRA_HOSTS = [host.strip() for host in os.getenv("ALLOWED_HOSTS", "").split(",")]
-# ALLOWED_HOSTS = ['.ngrok.io', 'localhost', '127.0.0.1', '0.0.0.0', *EXTRA_HOSTS]
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.ngrok.io', 'localhost', '127.0.0.1', '0.0.0.0', *EXTRA_HOSTS]
 
 # Application definition
 
@@ -83,9 +79,9 @@ WSGI_APPLICATION = 'ReachCare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DATABASE_NAME", ""),
-        'USER': os.getenv("DATABASE_USER", ""),
-        'PASSWORD': os.getenv("DATABASE_PASSWORD", ""),
+        'NAME': os.getenv("DATABASE_NAME", "reachcare"),
+        'USER': os.getenv("DATABASE_USER", "reachcare"),
+        'PASSWORD': os.getenv("DATABASE_PASSWORD", "hackthevirus"),
         'HOST': os.getenv("DATABASE_HOST", ""),
         'PORT': '',
     }

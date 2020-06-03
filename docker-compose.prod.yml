@@ -7,6 +7,8 @@ services:
       - "80:8000"
     command: python ReachCare/manage.py runserver 0.0.0.0:8000
     environment:
+      - DATABASE_NAME=${POSTGRES_DB}
+      - DATABASE_USER=${POSTGRES_USER}
       - DATABASE_HOST=db
       - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
       - DEBUG=${DEBUG}
