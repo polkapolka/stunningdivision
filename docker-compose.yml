@@ -7,7 +7,7 @@ services:
       - "8000:8000"
     volumes:
       - ".:/code"
-    command: ["./wait-for-it.sh", "db:5432", "--", "python", "ReachCare/manage.py", "runserver", "0.0.0.0:8000"]
+    command: ["./wait-for-it.sh", "db:5432", "--", "python", "ReachCare/manage.py", "runserver_plus", "0.0.0.0:8000", "--cert-file", "/tmp/cert.crt"]
     environment:
       - DATABASE_NAME=reachcare
       - DATABASE_USER=reachcare
