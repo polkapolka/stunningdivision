@@ -32,6 +32,8 @@ class Address(models.Model):
         max_length=1024,
         blank=True,
     )
+    long = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    lat = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
 
     def __str__(self):
         return f"{self.line_one + ', '}" \

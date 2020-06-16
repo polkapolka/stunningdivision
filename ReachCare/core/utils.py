@@ -1,5 +1,5 @@
 import logging
-
+from geopy import Nominatim
 import requests
 
 # http://api.geonames.org/findNearbyPostalCodes?postalcode=94611&country=USA&radius=10&username=reachcare
