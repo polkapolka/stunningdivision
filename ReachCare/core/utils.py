@@ -1,6 +1,10 @@
 import logging
 from geopy import Nominatim
 import requests
+from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+
+
 
 # http://api.geonames.org/findNearbyPostalCodes?postalcode=94611&country=USA&radius=10&username=reachcare
 # Get an instance of a logger
@@ -37,8 +41,17 @@ class GeoNamesClient:
 
 
 
+class GeoPyClient:
+    def __init__(self, user_agent='reachcare'):
+        self.geocode = RateLimiter(Nominatim(user_agent=user_agent).geocode, min_delay_seconds=1)
 
+    def find_lat_long_from_zipcode(self, zipcode):
+        loc = self.geocode(f"{zipcode}, US")
+        if loc:
+            return loc.latitude, loc.longitude
 
+    def find_distance(self, loc1, loc2):
+        return distance(loc1, loc2).miles
 
 
 
