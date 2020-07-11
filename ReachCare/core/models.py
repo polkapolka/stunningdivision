@@ -2,7 +2,9 @@ import zipcodes
 from django.db import models
 from phone_field import PhoneField
 from django.utils.translation import gettext_lazy as _
-from .utils import GeoNamesClient
+from geopy.distance import distance
+import zipcodes
+from . import utils
 
 class Address(models.Model):
     line_one = models.CharField(
@@ -32,6 +34,8 @@ class Address(models.Model):
         max_length=1024,
         blank=True,
     )
+    long = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    lat = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
 
     def __str__(self):
         return f"{self.line_one + ', '}" \
@@ -122,16 +126,38 @@ def parse_symptom_severity(text):
     return None
 
 
-def find_closest_address(zipcode, radius=10, max_limit=30, step=10):
+def find_closest_address_latlon(zipcode):
+    try:
+        code = zipcodes.matching(zipcode)[0]
+    except:
+        raise ValueError("Invalid Zipcode")
+    addresses = Address.objects.filter(region_state=code['state'], code=code['zip_code'], lat__isnull=False, long__isnull=False)
+    if addresses.count()==0:
+        addresses = Address.objects.filter(region_state=code['state'], city=code['city'], lat__isnull=False, long__isnull=False)
+    if addresses.count()==0:
+        addresses = Address.objects.filter(region_state=code['state'], lat__isnull=False, long__isnull=False)
+    # If more than one, append distance, sort and return min element
+    distances = {
+        address:
+            distance(
+                (address.lat, address.long),
+                (float(code['lat']), float(code['long']))
+            )
+        for address in addresses
+    }
+    return sorted(distances, key=distances.get)[0]
+
+
+def find_closest_address_geoname(zipcode, radius=10, max_limit=30, step=10):
     if radius > max_limit:
         raise ValueError("Too far to travel")
-    gc = GeoNamesClient()
+    gc = utils.GeoNamesClient()
     zipcodes = {postalcode.get("postalCode"): postalcode.get("distance")
                 for postalcode in gc.find_nearby_postal_codes(zipcode, radius=radius)}
     addresses = Address.objects.filter(code__in=zipcodes.keys())
     if len(addresses) == 0:
         # If no addresses, expand search radius
-        return find_closest_address(zipcode, radius+step)
+        return find_closest_address_geoname(zipcode, radius+step)
     elif len(addresses) == 1:
         # If only one, return one
         return addresses[0]
@@ -139,6 +165,7 @@ def find_closest_address(zipcode, radius=10, max_limit=30, step=10):
         # If more than one, append distance, sort and return min element
         distances = {address: zipcodes[address.code] for address in addresses}
         return sorted(distances, key=distances.get)[0]
+
 
 
 class UserQuestionnaire(models.Model):
@@ -182,6 +209,6 @@ class UserQuestionnaire(models.Model):
         if closest:
             return closest.testingsite_set.first()
         # Find the closest one
-        closest_address = find_closest_address(self.zip_code)
+        closest_address = find_closest_address_latlon(self.zip_code)
         return closest_address.testingsite_set.first()
 
