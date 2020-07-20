@@ -108,3 +108,8 @@ class TestQuestionnaireView(TestCase):
         self.make_sms_request("94611")
         user_questionnaire.refresh_from_db()
         self.assertEqual(user_questionnaire.zip_code, "94611")
+
+        self.make_sms_request("next")
+        user_questionnaire.refresh_from_db()
+        self.assertTrue(user_questionnaire.next_response)
+        self.assertEqual(user_questionnaire.result_index, 1)
