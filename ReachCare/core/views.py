@@ -40,6 +40,8 @@ TESTING_UNNECESSARY_TEXT = "You don’t need to get tested for Covid 19 at this 
 
 THANK_YOU_TEXT = "Thanks for using ReachCare! Respond with RESTART to start over."
 
+NEXT_TEXT = "Respond with NEXT to get the next closest testing site."
+
 
 def should_restart(current_text):
     clean_text = current_text.lower().strip()
@@ -112,6 +114,10 @@ def get_response_message(user_questionnaire):
         return ZIP_CODE_QUESTION
 
     if user_questionnaire.zip_code is not None:
+        if user_questionnaire.next_response is not None:
+            user_questionnaire.result_index = user_questionnaire.result_index + 1
+            user_questionnaire.save()
+
         try:
             closest_testing_site = user_questionnaire.get_closest_testing_site()
         except Exception as e:
@@ -119,7 +125,7 @@ def get_response_message(user_questionnaire):
             closest_testing_site = None
         if closest_testing_site is None:
             return f"{NO_TESTINGS_SITE_FOUND}\n{THANK_YOU_TEXT}"
-        return f"{closest_testing_site.as_text()}\n{THANK_YOU_TEXT}"
+        return f"{closest_testing_site.as_text()}\n{THANK_YOU_TEXT}{NEXT_TEXT}"
 
 
 def home_view(request):

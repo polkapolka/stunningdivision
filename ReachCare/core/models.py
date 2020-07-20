@@ -126,16 +126,25 @@ def parse_symptom_severity(text):
     return None
 
 
-def find_closest_address_latlon(zipcode):
+def parse_next(text):
+    clean_text = text.lower().strip()
+    if clean_text == 'next':
+        return True
+    return
+
+
+def find_closest_address_latlon(zipcode, index=0):
     try:
         code = zipcodes.matching(zipcode)[0]
     except:
         raise ValueError("Invalid Zipcode")
     addresses = Address.objects.filter(region_state=code['state'], code=code['zip_code'], lat__isnull=False, long__isnull=False)
-    if addresses.count()==0:
+    if addresses.count()==0 or addresses.count() <= index:
         addresses = Address.objects.filter(region_state=code['state'], city=code['city'], lat__isnull=False, long__isnull=False)
-    if addresses.count()==0:
+    if addresses.count()==0 or addresses.count() <= index:
         addresses = Address.objects.filter(region_state=code['state'], lat__isnull=False, long__isnull=False)
+    if addresses.count()==0:
+        raise ValueError("No site found.")
     # If more than one, append distance, sort and return min element
     distances = {
         address:
@@ -145,7 +154,7 @@ def find_closest_address_latlon(zipcode):
             )
         for address in addresses
     }
-    return sorted(distances, key=distances.get)[0]
+    return sorted(distances, key=distances.get)[index % addresses.count()]
 
 
 def find_closest_address_geoname(zipcode, radius=10, max_limit=30, step=10):
@@ -179,6 +188,8 @@ class UserQuestionnaire(models.Model):
     zip_code = models.CharField(max_length=6, default=None, null=True)
 
     last_message_sent = models.CharField(max_length=1024, default=None, null=True)
+    next_response = models.BooleanField(default=None, null=True)
+    result_index = models.IntegerField(default=0, null=True)
 
     def process_response(self, current_text):
         if self.wants_questionnaire is None:
@@ -200,15 +211,20 @@ class UserQuestionnaire(models.Model):
             if is_valid_zip_code(current_text):
                 self.zip_code = current_text
             return
+        
+        if self.next_response is None:
+            self.next_response = parse_next(current_text)
+            return
 
     def get_closest_testing_site(self):
         if self.zip_code is None:
             raise ValueError("zip code is not set. Cannot find closest testing site")
-        # Check for one in the person's zipcode
-        closest = Address.objects.filter(code=self.zip_code).first()
-        if closest:
-            return closest.testingsite_set.first()
+        if not self.next_response:
+            # Check for one in the person's zipcode
+            closest = Address.objects.filter(code=self.zip_code).first()
+            if closest:
+                return closest.testingsite_set.first()
         # Find the closest one
-        closest_address = find_closest_address_latlon(self.zip_code)
+        closest_address = find_closest_address_latlon(self.zip_code, index=self.result_index)
         return closest_address.testingsite_set.first()
 
