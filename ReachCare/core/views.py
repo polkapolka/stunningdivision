@@ -114,10 +114,6 @@ def get_response_message(user_questionnaire):
         return ZIP_CODE_QUESTION
 
     if user_questionnaire.zip_code is not None:
-        if user_questionnaire.next_response is not None:
-            user_questionnaire.result_index = user_questionnaire.result_index + 1
-            user_questionnaire.save()
-
         try:
             closest_testing_site = user_questionnaire.get_closest_testing_site()
         except Exception as e:

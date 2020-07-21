@@ -188,7 +188,6 @@ class UserQuestionnaire(models.Model):
     zip_code = models.CharField(max_length=6, default=None, null=True)
 
     last_message_sent = models.CharField(max_length=1024, default=None, null=True)
-    next_response = models.BooleanField(default=None, null=True)
     result_index = models.IntegerField(default=0, null=True)
 
     def process_response(self, current_text):
@@ -212,14 +211,14 @@ class UserQuestionnaire(models.Model):
                 self.zip_code = current_text
             return
         
-        if self.next_response is None:
-            self.next_response = parse_next(current_text)
+        if parse_next(current_text):
+            self.result_index += 1
             return
 
     def get_closest_testing_site(self):
         if self.zip_code is None:
             raise ValueError("zip code is not set. Cannot find closest testing site")
-        if not self.next_response:
+        if self.result_index == 0:
             # Check for one in the person's zipcode
             closest = Address.objects.filter(code=self.zip_code).first()
             if closest:
